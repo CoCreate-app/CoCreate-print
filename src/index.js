@@ -110,6 +110,12 @@ function print(elements) {
 		// Remove iframe after printing
 		iframe.parentNode.removeChild(iframe);
 	};
+
+	document.dispatchEvent(
+		new CustomEvent("printed", {
+			detail: { content }
+		})
+	);
 }
 
 init();
