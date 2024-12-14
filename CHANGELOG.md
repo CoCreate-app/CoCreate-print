@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/CoCreate-app/CoCreate-print/compare/v1.0.1...v1.0.2) (2024-12-14)
+
+
+### Bug Fixes
+
+* dispatch printed event ([1acdb66](https://github.com/CoCreate-app/CoCreate-print/commit/1acdb66d9f7988fd5494a0f035c5227e1ba7d831))
+
 ## [1.0.1](https://github.com/CoCreate-app/CoCreate-print/compare/v1.0.0...v1.0.1) (2024-12-14)
 
 
