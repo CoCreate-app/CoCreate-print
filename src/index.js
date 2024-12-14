@@ -40,12 +40,12 @@ function initElement(element) {
 	element.addEventListener("click", () => {
 		let actions = element.getAttribute("actions");
 		if (actions && !actions.includes("print")) {
-			qeueryPrintElement(element);
+			queryPrintElement(element);
 		}
 	});
 }
 
-function qeueryPrintElement(element) {
+function queryPrintElement(element) {
 	let elements = queryElements({ element, prefix: "print" });
 	if (elements === false) {
 		elements = [element];
@@ -53,18 +53,18 @@ function qeueryPrintElement(element) {
 	print(elements);
 }
 
-function print(element) {
-	if (element) return;
+function print(elements) {
+	if (!elements) return;
 	if (
-		!(element instanceof HTMLCollection) &&
-		!(element instanceof NodeList) &&
-		!Array.isArray(element)
+		!(elements instanceof HTMLCollection) &&
+		!(elements instanceof NodeList) &&
+		!Array.isArray(elements)
 	) {
-		element = [element];
+		elements = [elements];
 	}
 
 	let content = "";
-	element.forEach((target) => {
+	elements.forEach((target) => {
 		content += target.outerHTML; // Combine all target elements' HTML
 	});
 
@@ -82,9 +82,17 @@ function print(element) {
 		})
 		.join("");
 
-	// Open a new window for printing
-	const printWindow = window.open("", "", "width=800,height=600");
-	printWindow.document.write(`
+	// Create a hidden iframe for printing
+	const iframe = document.createElement("iframe");
+	iframe.style.position = "absolute";
+	iframe.style.top = "-9999px";
+	iframe.style.left = "-9999px";
+	document.body.appendChild(iframe);
+
+	// Write content to the iframe
+	const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+	iframeDoc.open();
+	iframeDoc.write(`
         <html>
         <head>
             <title>Print</title>
@@ -93,11 +101,15 @@ function print(element) {
         <body>${content}</body>
         </html>
     `);
-	printWindow.document.close();
-	printWindow.print();
+	iframeDoc.close();
 
-	// Trigger the "printed" event
-	// action.end();
+	// Wait for iframe content to load before triggering print
+	iframe.onload = () => {
+		iframe.contentWindow.print();
+
+		// Remove iframe after printing
+		iframe.parentNode.removeChild(iframe);
+	};
 }
 
 init();
@@ -107,7 +119,7 @@ Actions.init([
 		name: "print",
 		endEvent: "printed",
 		callback: (action) => {
-			print(action);
+			queryPrintElement(action.element);
 		}
 	}
 ]);
