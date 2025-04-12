@@ -10,8 +10,7 @@ import { queryElements } from "@cocreate/utils";
 import Actions from "@cocreate/actions";
 import Observer from "@cocreate/observer";
 
-const selector =
-	"[print-selector], [print-closest], [print-parent], [print-next], [print-previous]";
+const selector = "[print-query]";
 
 function init(element) {
 	if (!element) {
@@ -46,8 +45,10 @@ function initElement(element) {
 }
 
 function queryPrintElement(element) {
-	let elements = queryElements({ element, prefix: "print" });
-	if (elements === false) {
+	let elements = [];
+	if (element.hasAttribute("print-query")) {
+		elements = queryElements({ element, prefix: "print" });
+	} else {
 		elements = [element];
 	}
 	print(elements);
@@ -132,7 +133,7 @@ Actions.init([
 
 Observer.init({
 	name: "CoCreatePrintAddedNodes",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector,
 	callback(mutation) {
 		initElement(mutation.target);
@@ -141,14 +142,8 @@ Observer.init({
 
 Observer.init({
 	name: "CoCreatePrintObserver",
-	observe: ["attributes"],
-	attributeName: [
-		"print-selector",
-		"print-closest",
-		"print-parent",
-		"print-next",
-		"print-previous"
-	],
+	types: ["attributes"],
+	attributeFilter: ["print-query"],
 	selector,
 	callback: function (mutation) {
 		initElement(mutation.target);
