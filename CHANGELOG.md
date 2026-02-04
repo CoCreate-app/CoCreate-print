@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/CoCreate-app/CoCreate-print/compare/v1.0.3...v1.0.4) (2026-02-04)
+
+
+### Bug Fixes
+
+* update worklow ([b936bf9](https://github.com/CoCreate-app/CoCreate-print/commit/b936bf926d3691a8630a59a35553f1255404e451))
+
 ## [1.0.3](https://github.com/CoCreate-app/CoCreate-print/compare/v1.0.2...v1.0.3) (2025-05-01)
 
 
